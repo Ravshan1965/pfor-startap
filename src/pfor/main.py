@@ -6,8 +6,9 @@ import logging
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-
+from fastapi.responses import JSONResponse, FileResponse
+from fastapi.staticfiles import StaticFiles
+import os
 from pfor.api.auth import router as auth_router
 from pfor.api.strategy import router as strategy_router
 from pfor.core.config import get_settings
@@ -85,7 +86,10 @@ def health_check():
     )
 
 
+frontend_path = os.path.join(os.path.dirname(__file__), "../../frontend")
+app.mount("/static", StaticFiles(directory=frontend_path), name="static")
+
 @app.get("/", tags=["System"], summary="Root endpoint")
 def root():
-    """Root endpoint — redirect hint for API docs."""
-    return {"message": "PFOR API is running. Visit /docs for the interactive API."}
+    """Serve the frontend index.html on the root path."""
+    return FileResponse(os.path.join(frontend_path, "index.html"))
