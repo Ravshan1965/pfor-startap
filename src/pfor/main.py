@@ -45,7 +45,7 @@ app = FastAPI(
 # ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=settings.allowed_origins,
+    allow_origins=["*"], # Разрешаем доступ со всех IP, включая 178.218.207.173
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -93,3 +93,8 @@ app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 def root():
     """Serve the frontend index.html on the root path."""
     return FileResponse(os.path.join(frontend_path, "index.html"))
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run("pfor.main:app", host="0.0.0.0", port=8000, reload=True)
+
