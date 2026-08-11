@@ -6,6 +6,7 @@ persists the result, and returns the structured report.
 import logging
 
 from fastapi import APIRouter, Depends, Header, HTTPException, status
+# pyrefly: ignore [missing-import]
 from sqlalchemy.orm import Session
 
 from pfor.api.auth import get_user_from_token
