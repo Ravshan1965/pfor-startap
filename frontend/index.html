@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="ПФОР — Платформа Операционных Решений. Превратите бизнес-проблему в структурированную стратегию за 60 секунд с помощью мультиагентного ИИ.">
+  <meta name="keywords" content="ПФОР, бизнес-стратегия, ИИ, AI, B2B, SaaS, мультиагенты, Gemini">
+  <meta property="og:title" content="ПФОР — Платформа Операционных Решений">
+  <meta property="og:description" content="Мультиагентная AI-система, которая превращает вашу бизнес-проблему в готовую стратегию за 60 секунд.">
+  <meta property="og:type" content="website">
+  <title>ПФОР — Платформа Операционных Решений</title>
+
+  <!-- Preconnect for Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ================================================================
+       NAVBAR
+       ================================================================ -->
+  <nav class="navbar" role="navigation" aria-label="Main navigation">
+    <a href="/" class="navbar-brand" aria-label="PFOR Home">
+      <div class="brand-logo" aria-hidden="true">П</div>
+      <span class="brand-name">ПФОР</span>
+    </a>
+
+    <div class="navbar-actions">
+      <!-- Authenticated user badge (hidden until logged in) -->
+      <div id="nav-user-badge" class="user-badge hidden" aria-live="polite">
+        <span class="user-badge-dot" aria-hidden="true"></span>
+        <span id="nav-user-email"></span>
+      </div>
+
+      <!-- Login button (shown when logged out) -->
+      <button
+        id="nav-login-btn"
+        class="btn btn-ghost"
+        aria-label="Open login dialog"
+        type="button"
+      >
+        Войти
+      </button>
+
+      <!-- Logout button (shown when logged in) -->
+      <button
+        id="nav-logout-btn"
+        class="btn btn-ghost hidden"
+        aria-label="Log out"
+        type="button"
+      >
+        Выйти
+      </button>
+    </div>
+  </nav>
+
+  <!-- ================================================================
+       MAIN CONTENT
+       ================================================================ -->
+  <main id="main-content">
+    <div class="container">
+
+      <!-- ---- HERO SECTION ---- -->
+      <section class="hero" aria-labelledby="hero-heading">
+        <div class="hero-badge" aria-label="Platform status">
+          <span class="hero-badge-dot" aria-hidden="true"></span>
+          Мультиагентный ИИ · Gemini API
+        </div>
+
+        <h1 id="hero-heading" class="hero-title">
+          <span class="hero-title-gradient">ПФОР</span>
+        </h1>
+
+        <p class="hero-subtitle">
+          Опишите бизнес-проблему — мультиагентная система создаст
+          полноценную стратегию за&nbsp;60&nbsp;секунд.
+        </p>
+
+        <!-- ---- INPUT CARD ---- -->
+        <div class="input-card" role="region" aria-label="Problem input">
+          <label for="problem-textarea" class="input-card-label">
+            Ваша бизнес-задача
+          </label>
+
+          <textarea
+            id="problem-textarea"
+            class="problem-textarea"
+            placeholder="Например: Наш стартап делает B2B SaaS для автоматизации бухгалтерии малого бизнеса. Мы не можем масштабировать продажи — CAC слишком высок, конверсия из лида в клиента менее 5%. Как нам это исправить?"
+            aria-label="Describe your business problem"
+            aria-describedby="char-counter"
+            rows="7"
+            maxlength="5000"
+          ></textarea>
+
+          <div class="input-card-footer">
+            <span id="char-counter" class="char-counter" aria-live="polite">0 characters</span>
+            <button
+              id="generate-btn"
+              class="btn btn-primary btn-large"
+              type="button"
+              aria-label="Generate strategic report"
+            >
+              Сформировать стратегию
+            </button>
+          </div>
+        </div>
+
+        <!-- ---- AGENT PROGRESS ---- -->
+        <div
+          id="agents-progress"
+          class="agents-progress"
+          role="status"
+          aria-live="polite"
+          aria-label="Agent pipeline progress"
+        >
+          <p class="progress-title">⚡ Агенты анализируют ваш запрос…</p>
+
+          <div class="agents-grid">
+            <!-- Director Agent -->
+            <div id="agent-director" class="agent-chip" aria-label="Director agent">
+              <div class="agent-icon" aria-hidden="true">🎯</div>
+              <span class="agent-name">Director</span>
+              <span class="agent-status">Waiting...</span>
+            </div>
+
+            <!-- Marketer Agent -->
+            <div id="agent-marketer" class="agent-chip" aria-label="Marketer agent">
+              <div class="agent-icon" aria-hidden="true">📈</div>
+              <span class="agent-name">Marketer</span>
+              <span class="agent-status">Waiting...</span>
+            </div>
+
+            <!-- Financier Agent -->
+            <div id="agent-financier" class="agent-chip" aria-label="Financier agent">
+              <div class="agent-icon" aria-hidden="true">💰</div>
+              <span class="agent-name">Financier</span>
+              <span class="agent-status">Waiting...</span>
+            </div>
+
+            <!-- Editor Agent -->
+            <div id="agent-editor" class="agent-chip" aria-label="Editor agent">
+              <div class="agent-icon" aria-hidden="true">✍️</div>
+              <span class="agent-name">Editor</span>
+              <span class="agent-status">Waiting...</span>
+            </div>
+          </div>
+
+          <!-- Progress bar -->
+          <div class="progress-bar-wrap" aria-hidden="true">
+            <div id="progress-bar-fill" class="progress-bar-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ---- REPORT OUTPUT SECTION ---- -->
+      <section
+        id="report-section"
+        class="report-section"
+        aria-labelledby="report-heading"
+        aria-live="polite"
+      >
+        <div class="report-header">
+          <div class="report-header-left">
+            <h2 id="report-heading">Стратегический отчёт</h2>
+            <div class="report-badge" aria-label="Report generated">Готово</div>
+            <p id="report-meta-date" style="font-size:0.78rem;color:var(--text-muted);margin-top:4px;"></p>
+          </div>
+          <div class="report-actions">
+            <button
+              id="copy-report-btn"
+              class="btn btn-ghost"
+              type="button"
+              aria-label="Copy report to clipboard"
+            >
+              📋 Копировать
+            </button>
+            <button
+              id="print-report-btn"
+              class="btn btn-ghost"
+              type="button"
+              aria-label="Print report"
+            >
+              🖨️ Печать
+            </button>
+            <button
+              id="new-report-btn"
+              class="btn btn-outline"
+              type="button"
+              aria-label="Create new report"
+            >
+              + Новый отчёт
+            </button>
+          </div>
+        </div>
+
+        <div class="report-card">
+          <article id="report-content" class="report-content" aria-label="Generated strategy report">
+            <!-- Report rendered here by app.js -->
+          </article>
+        </div>
+      </section>
+
+      <!-- ---- FEATURES STRIP ---- -->
+      <section class="features-strip" aria-label="Platform features">
+        <div class="feature-item">
+          <span class="feature-icon" aria-hidden="true">🎯</span>
+          <h3 class="feature-title">Стратегический анализ</h3>
+          <p class="feature-desc">Agent Director формулирует цели и концепцию решения на основе вашей задачи.</p>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon" aria-hidden="true">📊</span>
+          <h3 class="feature-title">GTM и маркетинг</h3>
+          <p class="feature-desc">Agent Marketer строит воронки, определяет каналы и позиционирование.</p>
+        </div>
+        <div class="feature-item">
+          <span class="feature-icon" aria-hidden="true">💡</span>
+          <h3 class="feature-title">Финансовое моделирование</h3>
+          <p class="feature-desc">Agent Financier считает юнит-экономику, бюджет и сценарии роста.</p>
+        </div>
+      </section>
+
+    </div><!-- /container -->
+  </main>
+
+  <!-- ================================================================
+       FOOTER
+       ================================================================ -->
+  <footer class="footer" role="contentinfo">
+    <div class="container">
+      <p class="footer-text">
+        © 2025 ПФОР · Powered by
+        <a href="https://ai.google.dev/" target="_blank" rel="noopener noreferrer">Google Gemini</a>
+        · <a href="http://localhost:8000/docs" target="_blank" rel="noopener noreferrer">API Docs</a>
+      </p>
+    </div>
+  </footer>
+
+  <!-- ================================================================
+       AUTH MODAL
+       ================================================================ -->
+  <div
+    id="auth-modal-overlay"
+    class="modal-overlay"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    aria-hidden="true"
+  >
+    <div class="modal">
+      <!-- Close button -->
+      <button
+        id="modal-close-btn"
+        class="modal-close"
+        type="button"
+        aria-label="Close dialog"
+      >✕</button>
+
+      <!-- Modal header -->
+      <div class="modal-header">
+        <h2 id="modal-title" class="modal-title">Добро пожаловать</h2>
+        <p class="modal-subtitle">Войдите или создайте аккаунт для сохранения отчётов</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="modal-tabs" role="tablist">
+        <button
+          id="tab-login"
+          class="modal-tab active"
+          role="tab"
+          aria-selected="true"
+          aria-controls="login-form"
+          type="button"
+        >
+          Войти
+        </button>
+        <button
+          id="tab-register"
+          class="modal-tab"
+          role="tab"
+          aria-selected="false"
+          aria-controls="register-form"
+          type="button"
+        >
+          Регистрация
+        </button>
+      </div>
+
+      <!-- Login Form -->
+      <form id="login-form" role="tabpanel" aria-labelledby="tab-login" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="login-email">Email</label>
+          <input
+            id="login-email"
+            class="form-input"
+            type="email"
+            placeholder="you@company.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="login-password">Пароль</label>
+          <input
+            id="login-password"
+            class="form-input"
+            type="password"
+            placeholder="••••••••"
+            autocomplete="current-password"
+            required
+          >
+        </div>
+        <p id="login-error" class="form-error" role="alert"></p>
+        <button
+          id="login-submit"
+          class="btn btn-primary form-submit"
+          type="submit"
+        >
+          Войти
+        </button>
+      </form>
+
+      <!-- Register Form -->
+      <form id="register-form" class="hidden" role="tabpanel" aria-labelledby="tab-register" novalidate>
+        <div class="form-group">
+          <label class="form-label" for="register-email">Email</label>
+          <input
+            id="register-email"
+            class="form-input"
+            type="email"
+            placeholder="you@company.com"
+            autocomplete="email"
+            required
+          >
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="register-password">Пароль</label>
+          <input
+            id="register-password"
+            class="form-input"
+            type="password"
+            placeholder="Минимум 6 символов"
+            autocomplete="new-password"
+            minlength="6"
+            required
+          >
+        </div>
+        <p id="register-error" class="form-error" role="alert"></p>
+        <button
+          id="register-submit"
+          class="btn btn-primary form-submit"
+          type="submit"
+        >
+          Создать аккаунт
+        </button>
+      </form>
+    </div><!-- /modal -->
+  </div><!-- /modal-overlay -->
+
+  <!-- ================================================================
+       TOAST CONTAINER
+       ================================================================ -->
+  <div
+    id="toast-container"
+    class="toast-container"
+    role="region"
+    aria-live="polite"
+    aria-label="Notifications"
+  ></div>
+
+  <!-- ================================================================
+       SCRIPTS (auth before app so PforAuth is available)
+       ================================================================ -->
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
