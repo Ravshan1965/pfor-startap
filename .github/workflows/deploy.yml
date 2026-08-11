@@ -9,6 +9,14 @@ jobs:
     runs-on: self-hosted
 
     steps:
+      - name: Free disk space
+        run: |
+          df -h
+          sudo apt-get clean || true
+          sudo rm -rf /tmp/* || true
+          docker system prune -af || true
+          df -h
+
       - name: Checkout code
         uses: actions/checkout@v4
 
@@ -16,9 +24,15 @@ jobs:
         run: |
           python3 -m venv venv
           source venv/bin/activate
-          pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install --upgrade pip --no-cache-dir
+          if [ -f requirements.txt ]; then pip install -r requirements.txt --no-cache-dir; fi
 
       - name: Restart FastAPI Service
         run: |
-          sudo systemctl restart pfor
+          if systemctl list-units --full -all | grep -Fq "pfor.service"; then
+            sudo systemctl restart pfor
+            echo "✅ pfor service restarted"
+          else
+            echo "⚠️ pfor.service not found — skipping restart"
+            echo "Create the service manually on the server first"
+          fi
