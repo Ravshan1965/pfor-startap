@@ -68,6 +68,7 @@ function isAuthenticated() {
  */
 function updateNavbarAuthState() {
   const loginBtn   = document.getElementById('nav-login-btn');
+  const registerBtn = document.getElementById('nav-register-btn');
   const logoutBtn  = document.getElementById('nav-logout-btn');
   const userBadge  = document.getElementById('nav-user-badge');
   const userEmail  = document.getElementById('nav-user-email');
@@ -76,11 +77,13 @@ function updateNavbarAuthState() {
 
   if (user && isAuthenticated()) {
     loginBtn  && loginBtn.classList.add('hidden');
+    registerBtn && registerBtn.classList.add('hidden');
     logoutBtn && logoutBtn.classList.remove('hidden');
     userBadge && userBadge.classList.remove('hidden');
     if (userEmail) userEmail.textContent = user.email;
   } else {
     loginBtn  && loginBtn.classList.remove('hidden');
+    registerBtn && registerBtn.classList.remove('hidden');
     logoutBtn && logoutBtn.classList.add('hidden');
     userBadge && userBadge.classList.add('hidden');
   }
@@ -96,7 +99,7 @@ function updateNavbarAuthState() {
  */
 function openAuthModal(tab = 'login') {
   const overlay = document.getElementById('auth-modal-overlay');
-  overlay && overlay.classList.add('visible');
+  overlay && overlay.classList.remove('hidden');
   switchAuthTab(tab);
   clearAuthErrors();
 }
@@ -106,7 +109,7 @@ function openAuthModal(tab = 'login') {
  */
 function closeAuthModal() {
   const overlay = document.getElementById('auth-modal-overlay');
-  overlay && overlay.classList.remove('visible');
+  overlay && overlay.classList.add('hidden');
   clearAuthErrors();
 }
 
@@ -320,6 +323,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Nav buttons
   document.getElementById('nav-login-btn')?.addEventListener('click', () => openAuthModal('login'));
+  document.getElementById('nav-register-btn')?.addEventListener('click', () => openAuthModal('register'));
   document.getElementById('nav-logout-btn')?.addEventListener('click', handleLogout);
 
   // Forms

@@ -45,6 +45,16 @@
         Войти
       </button>
 
+      <!-- Register button (shown when logged out) -->
+      <button
+        id="nav-register-btn"
+        class="btn btn-primary"
+        aria-label="Open register dialog"
+        type="button"
+      >
+        Регистрация
+      </button>
+
       <!-- Logout button (shown when logged in) -->
       <button
         id="nav-logout-btn"
@@ -242,7 +252,7 @@
        ================================================================ -->
   <div
     id="auth-modal-overlay"
-    class="modal-overlay"
+    class="modal-overlay hidden"
     role="dialog"
     aria-modal="true"
     aria-labelledby="modal-title"
