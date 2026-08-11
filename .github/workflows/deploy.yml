@@ -27,12 +27,28 @@ jobs:
           pip install --upgrade pip --no-cache-dir
           if [ -f requirements.txt ]; then pip install -r requirements.txt --no-cache-dir; fi
 
-      - name: Restart FastAPI Service
+      - name: Setup and Restart FastAPI Service
         run: |
-          if systemctl list-units --full -all | grep -Fq "pfor.service"; then
-            sudo systemctl restart pfor
-            echo "✅ pfor service restarted"
-          else
-            echo "⚠️ pfor.service not found — skipping restart"
-            echo "Create the service manually on the server first"
-          fi
+          sudo ufw allow 80/tcp || true
+          
+          cat << EOF | sudo tee /etc/systemd/system/pfor.service
+          [Unit]
+          Description=PFOR FastAPI Server
+          After=network.target
+
+          [Service]
+          User=root
+          WorkingDirectory=${{ github.workspace }}
+          Environment="PATH=${{ github.workspace }}/venv/bin"
+          Environment="PYTHONPATH=${{ github.workspace }}/src"
+          ExecStart=${{ github.workspace }}/venv/bin/uvicorn pfor.main:app --host 0.0.0.0 --port 80
+          Restart=always
+
+          [Install]
+          WantedBy=multi-user.target
+          EOF
+          
+          sudo systemctl daemon-reload
+          sudo systemctl enable pfor
+          sudo systemctl restart pfor
+          echo "✅ pfor service created and started on port 80!"
